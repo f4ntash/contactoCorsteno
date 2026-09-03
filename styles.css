@@ -49,6 +49,19 @@ h2 { max-width: 360px; margin: 0; font-size: clamp(25px, 7.4vw, 31px); line-heig
 .button:focus-visible, .contact a:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
 .button-icon { font-size: 18px; line-height: 1; }
 .whatsapp-note { min-height: 15px; margin: 2px 0 -8px; color: var(--muted); font-size: 11px; }
+.featured-projects { margin-top: 39px; }
+.featured-projects h3 { margin: 0 0 12px; color: var(--muted); font-size: 10px; font-weight: 400; letter-spacing: .13em; text-transform: uppercase; }
+.project-list { display: grid; gap: 9px; }
+.project-card { min-height: 88px; display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 15px 16px; border: 1px solid var(--line); border-radius: 3px; color: var(--paper); text-decoration: none; transition: border-color .18s ease, background-color .18s ease, transform .18s ease; }
+.project-card:hover { border-color: var(--accent); background: rgba(216, 219, 189, .06); }
+.project-card:active { transform: translateY(1px); background: rgba(216, 219, 189, .1); }
+.project-card:focus-visible, .site-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.project-copy { display: grid; gap: 7px; min-width: 0; }
+.project-copy strong { font-size: 14px; font-weight: 400; }
+.project-copy > span { color: var(--muted); font-size: 12px; line-height: 1.35; }
+.project-cta { flex: 0 0 auto; color: var(--accent); font-size: 11px; white-space: nowrap; }
+.project-cta span, .site-link span { padding-left: 5px; font-size: 15px; }
+.site-link { display: flex; justify-content: space-between; align-items: center; margin-top: 25px; padding-bottom: 1px; color: var(--paper); font-size: 13px; text-decoration: none; }
 .contact { display: flex; justify-content: space-between; gap: 16px; margin-top: 44px; padding-top: 15px; border-top: 1px solid var(--line); color: var(--muted); font-size: 11px; }
 .contact a { text-decoration: none; }
 .contact a:hover { color: var(--paper); }
@@ -56,6 +69,8 @@ h2 { max-width: 360px; margin: 0; font-size: clamp(25px, 7.4vw, 31px); line-heig
 @media (max-height: 700px) and (min-width: 360px) {
   .card-topline { margin-bottom: 28px; }
   .brand-block { margin-bottom: 35px; }
+  .featured-projects { margin-top: 28px; }
+  .site-link { margin-top: 19px; }
   .contact { margin-top: 25px; }
 }
 
