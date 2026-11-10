@@ -67,6 +67,19 @@
     @media (min-width:780px){.app{height:100svh;min-height:690px;max-height:1000px;padding:20px 0}.arena{min-height:430px}.start-title{font-size:clamp(77px,8.5vw,117px)}.screen{padding:35px}}
     @media (max-width:480px){.app{min-height:100svh;height:100svh;max-height:900px;padding:9px 0 15px;gap:8px}.topbar{min-height:46px}.logo-mark{width:28px;height:28px;font-size:14px}.event-tag{font-size:9px;padding:7px 9px}.game-shell{gap:8px}.hud{min-height:46px}.pill{min-width:82px;padding:6px 12px;border-width:2.5px}.pill strong{font-size:22px}.sound-btn{width:43px;height:43px;border-width:2.5px}.arena{min-height:0;border-radius:25px;box-shadow:6px 6px 0 var(--ink)}.sticker{font-size:10px}.start-title{font-size:clamp(52px,14vw,82px);margin-top:24px}.start-sub{margin-top:21px;margin-bottom:20px;font-size:16px}.big-button{min-height:62px}.instructions{margin-top:25px;font-size:10px;gap:7px}.footer{font-size:9px;min-height:20px}}
     @media (max-width:350px){.app{width:calc(100% - 17px)}.start-title{font-size:50px}.screen{padding:10px}.result-title{font-size:40px}.result-actions{gap:9px}.result-actions .big-button,.secondary-button{font-size:14px}.event-tag{font-size:8px}}
+    @media (orientation:landscape) and (max-height:520px){
+      .app{height:100svh;min-height:0;max-height:none;padding:5px 0 6px;gap:4px}
+      .topbar{min-height:27px}.logo{font-size:16px}.logo-mark{width:24px;height:24px;font-size:13px;border-width:2px}.event-tag{font-size:8px;padding:4px 8px;border-width:2px}
+      .game-shell{min-height:0;gap:4px}.hud{min-height:34px}.pill{min-width:75px;padding:3px 9px;border-width:2px;border-radius:10px;font-size:9px;box-shadow:2px 2px 0 var(--ink)}.pill strong{font-size:18px}.sound-btn{width:36px;height:36px;border-width:2px;border-radius:10px;font-size:18px;box-shadow:2px 2px 0 var(--ink)}
+      .arena{min-height:0;border-width:3px;border-radius:18px;box-shadow:4px 4px 0 var(--ink)}.screen{padding:6px 12px}.sticker{padding:3px 8px;border-width:2px;border-radius:8px;box-shadow:2px 2px 0 var(--ink);font-size:8px}
+      .start-title{font-size:clamp(42px,14vh,60px);margin:6px 0 3px}.start-sub{font-size:12px;line-height:1.08;margin:5px 0 7px;padding:4px 8px;border-width:2px;box-shadow:2px 2px 0 var(--ink)}.big-button{min-height:38px;padding:5px 16px;border-width:2px;border-radius:11px;box-shadow:3px 3px 0 var(--ink);font-size:16px}.instructions{margin-top:7px;font-size:8px;gap:5px}.instructions span{padding:2px 5px;border-width:1px}
+      .result-title{font-size:clamp(32px,10vh,48px);margin:7px 0 2px}.result-points{font-size:15px;margin:5px auto 3px;padding:3px 10px;border-width:2px;box-shadow:2px 2px 0 var(--ink)}.result-points strong{font-size:26px}.result-line{font-size:11px;margin:4px 0 6px}.result-actions{gap:8px}.result-actions .big-button{font-size:12px;min-height:32px;padding:4px 9px}.secondary-button{font-size:12px;padding:5px 9px;border-width:2px;border-radius:9px;box-shadow:2px 2px 0 var(--ink)}.result-links{font-size:10px;gap:10px;margin-top:7px}
+      .guide{bottom:7px;font-size:9px;padding:4px 7px}.footer{font-size:8px;min-height:11px}.footer .hint{font-size:8px}
+    }
+    @media (orientation:landscape) and (max-height:340px){
+      .start-title{font-size:clamp(38px,12vh,44px);margin:4px 0 2px}.start-title em{display:inline}.start-sub{margin:4px 0 5px}.instructions{margin-top:5px}
+      .result-title{font-size:32px;margin:4px 0 2px}.result-points{font-size:13px;margin:3px auto 2px;padding:2px 8px}.result-points strong{font-size:22px}.result-line{margin:2px 0 4px}.result-links{margin-top:4px}
+    }
     @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
   </style>
 </head>
@@ -130,7 +143,9 @@
     let state='ready',score=0,best=0,combo=0,lastHit=0,timeLeft=TOTAL,elapsed=0,spawnIn=0;
     let lastFrame=0,countIndex=0,countTimer=0,pointerDown=false,lastPointer=null,sound=true,audio=null;
     let sessionId=0,frameTick=0;
-    try{best=Number(localStorage.getItem('corstenoPopBest')||0)||0}catch(e){}
+    const savedBest=()=>{try{return Math.max(0,Number(localStorage.getItem('corstenoPopBest')||0)||0)}catch(e){return 0}};
+    best=savedBest();
+    window.addEventListener('storage',e=>{if(e.key!=='corstenoPopBest'||e.newValue===null)return;const value=Math.max(0,Number(e.newValue)||0);if(value>best)best=value;else if(value<best)try{localStorage.setItem('corstenoPopBest',String(best))}catch(err){}});
     const rand=(a,b)=>a+Math.random()*(b-a);
     const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
     function resize(){
@@ -214,7 +229,7 @@
       ctx.restore();
     }
     function drawParticle(p){ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.vx*.008);ctx.globalAlpha=clamp(p.life*1.8,0,1);ctx.fillStyle=p.c;ctx.strokeStyle='#231c48';ctx.lineWidth=1.5;if(p.rect){ctx.fillRect(-p.size/2,-p.size/2,p.size,p.size*.55);ctx.strokeRect(-p.size/2,-p.size/2,p.size,p.size*.55)}else{ctx.beginPath();ctx.arc(0,0,p.size*.52,0,Math.PI*2);ctx.fill()}ctx.restore()}
-    function end(){if(state!=='playing')return;state='ended';show(guide,false);show(endScreen,true);show(countdownEl,false);if(score>best){best=score;try{localStorage.setItem('corstenoPopBest',String(best))}catch(e){}}
+    function end(){if(state!=='playing')return;state='ended';show(guide,false);show(endScreen,true);show(countdownEl,false);best=Math.max(best,savedBest());if(score>best){best=score;try{localStorage.setItem('corstenoPopBest',String(best))}catch(e){}}
       $('#endScore').textContent=score;
       $('#endTitle').innerHTML=score>=420?'SOS PURO <span class="hot">WOW.</span>':score>=210?'¡QUÉ NIVEL DE <span class="hot">PLAY!</span>':'¡SE ARMÓ EL <span class="hot">POP!</span>';
       $('#rankSticker').textContent=score>=420?'✦ LEYENDA DEL POP ✦':score>=210?'★ PRO DEL PLAY ★':'★ ROMPISTE LA RUTINA ★';
@@ -227,11 +242,11 @@
         ctx.globalAlpha=.35;ctx.fillStyle=['#ff668c','#a58dff','#ffcf40'][i%3];ctx.font=`900 ${s}px system-ui`;ctx.fillText('✦',x,y)}ctx.restore()
     }
     function loop(now){
-      if(!lastFrame)lastFrame=now;let dt=clamp((now-lastFrame)/1000,0,.05);lastFrame=now;frameTick++;
+      if(!lastFrame)lastFrame=now;const visibleDt=Math.max(0,(now-lastFrame)/1000),dt=Math.min(visibleDt,.05);lastFrame=now;frameTick++;
       if(document.hidden){requestAnimationFrame(loop);return;}
       ctx.clearRect(0,0,w,h);backgroundSparkles(now);
       if(state==='playing'){
-        elapsed+=dt;timeLeft=Math.max(0,TOTAL-elapsed);timeText.textContent=Math.ceil(timeLeft);progress.style.transform=`scaleX(${timeLeft/TOTAL})`;
+        elapsed+=visibleDt;timeLeft=Math.max(0,TOTAL-elapsed);timeText.textContent=Math.ceil(timeLeft);progress.style.transform=`scaleX(${timeLeft/TOTAL})`;
         if(timeLeft<=0)end();
         spawnIn-=dt;
         if(spawnIn<=0){spawnBurst();spawnIn=rand(.33,.57)*clamp(1-elapsed/TOTAL*.35,.6,1)}
