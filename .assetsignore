@@ -1,0 +1,7 @@
+/.git/
+/.wrangler/
+/wrangler.jsonc
+/.assetsignore
+/node_modules/
+/.env*
+/.dev.vars*
